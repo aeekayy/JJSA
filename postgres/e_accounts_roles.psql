@@ -1,0 +1,5 @@
+CREATE TABLE e_accounts_roles ( 
+	e_account_role_id SERIAL PRIMARY KEY, 
+	account_id INTEGER REFERENCES accounts(account_id), 
+	role_id INTEGER REFERENCES roles(role_id) 
+);
