@@ -6,7 +6,8 @@
         "node": ">=0.8.0"
     },
     "dependencies": {
-        "hapi": "0.8.x"
+        "hapi": "0.8.x",
+	"pg": "^4.1.0"
     },
     "private": "true"
 }

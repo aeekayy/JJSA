@@ -1,19 +1,69 @@
 var Types = require('hapi').Types;
+var pg = require('pg');
+var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/jjsa';
 
 module.exports = [
-	{ method: 'GET', path: '/accounts', config: { handler: getAccounts, query: { name: Types.String() } } },
-	{ method: 'GET', path: '/accounts/{id}', config: { handler: getAccount } },
-	{ method: 'GET', path: '/roles', config: { handler: getRoles, query: { name: Types.String() } } },
-	{ method: 'GET', path: '/roles/{id}', config: { handler: getRole } },
-	{ method: 'POST', path: '/roles', config: { handler: addRole, payload: 'parse', schema: { name: Types.String().required().min(3) }, response: { id: Types.Number().required() } } }
+	{ 
+		method: 'GET', 
+		path: '/api/v1/accounts', 
+		config: { 
+			handler: getAccounts, 
+			query: { name: Types.String() } 
+		} 
+	},
+	{ 
+		method: 'GET', 
+		path: '/api/v1/accounts/{id}', 
+		config: { handler: getAccount } 
+	},
+	{ 
+		method: 'GET', 
+		path: '/api/v1/roles', 
+		config: { 
+			handler: getRoles, 
+			query: { name: Types.String() } 
+		} 
+	},
+	{ 
+		method: 'GET', 
+		path: '/api/v1/roles/{id}', 
+		config: { handler: getRole } 
+	},
+	{ 
+		method: 'POST', 
+		path: '/api/v1/roles', 
+		config: { 
+			handler: addRole, 
+			payload: 'parse', 
+			schema: { name: Types.String().required().min(3) }, 
+			response: { id: Types.Number().required() } 
+		} 
+	}
 ];
 
 function getAccounts(request) {
-	if (request.query.name) {
-		request.reply(findAccounts(request.query.name));
-	} else {
-		request.reply(accounts);
-	}
+	var results = [];
+
+	pg.connect(connectionString, function(err, client, done) {
+		if (request.query.name) {
+			var query = client.query("SELECT * FROM accounts WHERE accounts.username=$1 ORDER BY id ASC", [request.query.name]);
+		} else {
+			var query = client.query("SELECT * FROM accounts ORDER BY id ASC");
+		}
+
+		query.on('row', function(row) {
+			results.push(row); 
+		});
+
+		query.on('end', function() {
+			client.end();
+			reutrn res.json(results);
+		});
+
+		if(err) {
+			console.log(err);
+		}
+	});
 }
 
 function findAccounts(name) {

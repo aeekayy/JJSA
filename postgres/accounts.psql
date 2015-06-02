@@ -7,5 +7,5 @@ CREATE TABLE accounts (
 	salt VARCHAR(64) NOT NULL, 
 	gender BOOLEAN NOT NULL,
 	emailaddr VARCHAR(255) UNIQUE NOT NULL, 
-	confirmed TIMESTAMP
+	confirmed TIMESTAMP WITHOUT TIME ZONE DEFAULT (now() AT TIME ZONE 'utc') NOT NULL
 );
