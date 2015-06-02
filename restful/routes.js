@@ -16,7 +16,7 @@ function getAccounts(request) {
 }
 
 function findAccounts(name) {
-	return accounts.filter(function(account)) {
+	return accounts.filter(function(account) {
 		return account.name.toLowerCase() === name.toLowerCase(); 
 	});
 }
