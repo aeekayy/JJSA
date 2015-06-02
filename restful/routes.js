@@ -3,6 +3,7 @@ var Types = require('hapi').Types;
 module.exports = [
 	{ method: 'GET', path: '/accounts', config: { handler: getAccounts, query: { name: Types.String() } } },
 	{ method: 'GET', path: '/accounts/{id}', config: { handler: getAccount } },
+	{ method: 'GET', path: '/roles', config: { handler: getRoles, query: { name: Types.String() } } },
 	{ method: 'GET', path: '/roles/{id}', config: { handler: getRole } },
 	{ method: 'POST', path: '/roles', config: { handler: addRole, payload: 'parse', schema: { name: Types.String().required().min(3) }, response: { id: Types.Number().required() } } }
 ];
@@ -27,6 +28,20 @@ function getAccount(request) {
 	}).pop();
 
 	request.reply(account);
+}
+
+function getRoles(request) {
+	if (request.query.name) {
+		request.reply(findRoles(request.query.name));
+	} else {
+		request.reply(roles);
+	}
+}
+
+function findRoles(name) {
+	return roles.filter(function(role) {
+		return roles.name.toLowerCase() === name.toLowerCase(); 
+	});
 }
 
 function getRole(request) {
