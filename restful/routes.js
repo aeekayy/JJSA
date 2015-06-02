@@ -1,6 +1,8 @@
 var Types = require('hapi').Types;
 var pg = require('pg');
-var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/jjsa';
+//var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/jjsa';
+var connectionString = 'postgres://localhost:5432/jjsa';
+var client = new pg.Client(connectionString);
 
 module.exports = [
 	{ 
@@ -43,12 +45,12 @@ module.exports = [
 
 function getAccounts(request) {
 	var results = [];
-
+	
 	pg.connect(connectionString, function(err, client, done) {
-		if (request.query.name) {
-			var query = client.query("SELECT * FROM accounts WHERE accounts.username=$1 ORDER BY id ASC", [request.query.name]);
+		if(request.query.name) {
+			var query = client.query("SELECT * FROM accounts WHERE username=$1 ORDER BY account_id ASC;", [request.query.name]);
 		} else {
-			var query = client.query("SELECT * FROM accounts ORDER BY id ASC");
+			var query = client.query("SELECT * FROM accounts ORDER BY account_id ASC;");
 		}
 
 		query.on('row', function(row) {
@@ -57,9 +59,10 @@ function getAccounts(request) {
 
 		query.on('end', function() {
 			client.end();
-			reutrn res.json(results);
+			request.reply(results);
 		});
 
+		// Handle Errors
 		if(err) {
 			console.log(err);
 		}
