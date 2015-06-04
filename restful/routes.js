@@ -1,5 +1,6 @@
 var Types = require('hapi').Types;
 var pg = require('pg');
+var inflection = require('inflection');
 //var connectionString = process.env.DATABASE_URL || 'postgres://localhost:5432/jjsa';
 var connectionString = 'postgres://localhost:5432/jjsa';
 var client = new pg.Client(connectionString);
@@ -42,6 +43,30 @@ module.exports = [
 		} 
 	}
 ];
+
+function getAllRows(className) {
+	var tblname = inflection.plularize(className.toLowerCase());
+	var results = [];
+	var queryStr = "SELECT * FROM " + tblname + " ORDER BY " + className.toLowerCase() + "_id ASC;";
+
+	pg.connect(connectionString, function(err, client, done) {
+		var query = client.query(queryStr);
+
+		query.on('row', function(row) {
+			results.push(row);
+		});
+
+		query.on('end', function() {
+			client.end();
+		});
+
+		if(err) {
+			console.log(err);
+		}
+
+		return results; 
+	}
+}
 
 function getAccounts(request) {
 	var results = [];

@@ -8,7 +8,9 @@
     "dependencies": {
         "hapi": "0.8.x",
 	"pg": "^4.1.0", 
-	"pg-native": "*"
+	"pg-native": "*",
+	"inflection": "*",
+	"underscore": "1.x"
     },
     "private": "true"
 }
