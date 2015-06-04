@@ -1,0 +1,6 @@
+CREATE TABLE activities ( 
+	activity_id SERIAL PRIMARY KEY, 
+	activity_name VARCHAR(64) NOT NULL,
+	activity_shortcode CHARACTER(2) UNIQUE NOT NULL, 
+	activity_description TEXT 
+);

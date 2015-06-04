@@ -1,0 +1,5 @@
+CREATE TABLE e_accounts_activities (
+	e_account_activity_id SERIAL PRIMARY KEY,
+	account_id INTEGER REFERENCES accounts(account_id),
+	activity_id INTEGER REFERENCES activities(activity_id)
+);
