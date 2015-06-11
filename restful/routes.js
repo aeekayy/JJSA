@@ -109,11 +109,29 @@ function getAccount(request) {
 }
 
 function getRoles(request) {
-	if (request.query.name) {
-		request.reply(findRoles(request.query.name));
-	} else {
-		request.reply(roles);
-	}
+	var results = [];
+	
+	pg.connect(connectionString, function(err, client, done) {
+		if(request.query.name) {
+			var query = client.query("SELECT * FROM roles WHERE role_name=$1 ORDER BY role_id ASC;", [request.query.name]);
+		} else {
+			var query = client.query("SELECT * FROM roles ORDER BY role_id ASC;");
+		}
+
+		query.on('row', function(row) {
+			results.push(row); 
+		});
+
+		query.on('end', function() {
+			client.end();
+			request.reply(results);
+		});
+
+		// Handle Errors
+		if(err) {
+			console.log(err);
+		}
+	});
 }
 
 function findRoles(name) {
