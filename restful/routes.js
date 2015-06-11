@@ -44,12 +44,12 @@ module.exports = [
 	}
 ];
 
-function getAllRows(className) {
+function getAllRows(className, request) {
 	var tblname = inflection.plularize(className.toLowerCase());
 	var results = [];
 	var queryStr = "SELECT * FROM " + tblname + " ORDER BY " + className.toLowerCase() + "_id ASC;";
 
-	/*pg.connect(connectionString, function(err, client, done) {
+	pg.connect(connectionString, function(err, client, done) {
 		var query = client.query(queryStr);
 
 		query.on('row', function(row) {
@@ -63,7 +63,7 @@ function getAllRows(className) {
 		if(err) {
 			console.log(err);
 		}
-	}*/
+	});
 }
 
 function getAccounts(request) {
@@ -107,29 +107,7 @@ function getAccount(request) {
 }
 
 function getRoles(request) {
-	var results = [];
-	
-	pg.connect(connectionString, function(err, client, done) {
-		if(request.query.name) {
-			var query = client.query("SELECT * FROM roles WHERE role_name=$1 ORDER BY role_id ASC;", [request.query.name]);
-		} else {
-			var query = client.query("SELECT * FROM roles ORDER BY role_id ASC;");
-		}
-
-		query.on('row', function(row) {
-			results.push(row); 
-		});
-
-		query.on('end', function() {
-			client.end();
-			request.reply(results);
-		});
-
-		// Handle Errors
-		if(err) {
-			console.log(err);
-		}
-	});
+	getAllRows('Role', request);
 }
 
 function findRoles(name) {
