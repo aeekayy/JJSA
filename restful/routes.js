@@ -49,7 +49,7 @@ function getAllRows(className) {
 	var results = [];
 	var queryStr = "SELECT * FROM " + tblname + " ORDER BY " + className.toLowerCase() + "_id ASC;";
 
-	pg.connect(connectionString, function(err, client, done) {
+	/*pg.connect(connectionString, function(err, client, done) {
 		var query = client.query(queryStr);
 
 		query.on('row', function(row) {
@@ -63,7 +63,7 @@ function getAllRows(className) {
 		if(err) {
 			console.log(err);
 		}
-	}
+	}*/
 }
 
 function getAccounts(request) {
