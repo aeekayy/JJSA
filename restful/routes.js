@@ -158,9 +158,5 @@ var accounts = [{
 var roles = [{
 	id: 1,
 	name: 'Administrator'
-	},
-	{
-	id: 2,
-	name: 'User'
 	}
 ];
