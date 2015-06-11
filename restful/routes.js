@@ -63,8 +63,6 @@ function getAllRows(className) {
 		if(err) {
 			console.log(err);
 		}
-
-		return results; 
 	}
 }
 
